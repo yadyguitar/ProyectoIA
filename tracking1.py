@@ -10,7 +10,7 @@ def detect_faces(image):
 	#print 'detect fn' #
 	faces = []
 	#detected = cv.HaarDetectObjects(image, cascade, storage, 1.2, 2, cv.CV_HAAR_DO_CANNY_PRUNING, (100,100))
-	detected = cascade.detectMultiScale(image,1.1,4,cv2.cv.CV_HAAR_SCALE_IMAGE,(20,20))
+	detected = cascade.detectMultiScale(image,1.3,4,cv2.cv.CV_HAAR_SCALE_IMAGE,(20,20))
 	print detected
 
 	if detected!=[]:
