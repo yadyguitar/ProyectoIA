@@ -44,18 +44,21 @@ class App:
 		self.cam = video.create_capture(video_src)
 		self.frame_idx = 0
 		self.out = cv2.VideoWriter('output.avi', cv2.cv.CV_FOURCC(*'DIVX'), 20.0, (640,480))
+		self.dist=(0,0)
+		self.x=0
+		self.y=0
+		self.w=0
+		self.h=0
 
     def run(self):
+    	
     	i=0
         while True:
 			ret, frame = self.cam.read()
 			frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 			vis = frame.copy()
 			
-			x=0
-			y=0
-			w=0
-			y=0
+			
 			faces = []
 			#detected = cv.HaarDetectObjects(frame, cascade, storage, 1.2, 2, cv.CV_HAAR_DO_CANNY_PRUNING, (100,100))
 			detected = cascade.detectMultiScale(frame,1.3,4,cv2.cv.CV_HAAR_SCALE_IMAGE,(20,20))
@@ -63,16 +66,12 @@ class App:
 				#print 'face detected' #
 				for (x,y,w,h) in detected: #for (x,y,w,h),n in detected:
 					faces.append((x,y,w,h))
-			for (x,y,w,h) in faces:
+			for (self.x,self.y,self.w,self.h) in faces:
 				#print 'drawing rectangle' #
 					cv2.cv.Rectangle(cv2.cv.fromarray(vis), (x,y), (x+w,y+h), 255)
 			
 			
 			if len(self.tracks) > 0:
-				for element in self.tracks:
-					if element[0][0]<x or element[0][0]>x+w or element[0][1]<y or element[0][1]>y+h:
-						pass#self.tracks.remove(element)
-
 				img0, img1 = self.prev_gray, frame_gray
 
 				p0 = np.float32([tr[-1] for tr in self.tracks]).reshape(-1, 1, 2)
@@ -87,7 +86,7 @@ class App:
 				for tr, (x1, y1), good_flag in zip(self.tracks, p1.reshape(-1, 2), good):
 					if not good_flag:
 						continue
-					if x1>x and x1<x+w and y1>y and y1<y+h:
+					if x1>self.x and x1<self.x+self.w and y1>self.y and y1<self.y+self.h:
 						print x,y,x+w,y+h," y ",x1,y1
 						tr.append((x1, y1))
 						if len(tr) > self.track_len:
@@ -99,9 +98,10 @@ class App:
 					temp=np.array(np.mean(coords,axis=0))
 					tx,ty=temp[0],temp[1]
 					cv2.circle(vis,(tx,ty),2,(0,255,0),-1)
+					cv2.cv.Rectangle(cv2.cv.fromarray(vis), (self.x,self.y), (self.x+self.w,self.y+self.h), 255)
 				except:
 					print "no hay puntos de interes..."
-					
+
 				self.tracks = new_tracks
 				#cv2.polylines(vis, [np.int32(tr) for tr in self.tracks], False, (0, 255, 0))
 				draw_str(vis, (20, 20), 'track count: %d' % len(self.tracks))
