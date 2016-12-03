@@ -17,7 +17,7 @@ Keys
 ----
 ESC - exit
 '''
-
+from PIL import Image
 import numpy as np
 import cv2
 import video
@@ -44,18 +44,21 @@ class App:
 		self.cam = video.create_capture(video_src)
 		self.frame_idx = 0
 		self.out = cv2.VideoWriter('output.avi', cv2.cv.CV_FOURCC(*'DIVX'), 20.0, (640,480))
-		self.dist=(0,0)
+		self.distx=0
+		self.disty=0
 		self.x=0
 		self.y=0
 		self.w=0
 		self.h=0
 
     def run(self):
-    	
+    	band=0
     	i=0
+
         while True:
 			ret, frame = self.cam.read()
 			frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+			frame_gray=cv2.equalizeHist(frame_gray)
 			vis = frame.copy()
 			
 			
@@ -87,7 +90,7 @@ class App:
 					if not good_flag:
 						continue
 					if x1>self.x and x1<self.x+self.w and y1>self.y and y1<self.y+self.h:
-						print x,y,x+w,y+h," y ",x1,y1
+						
 						tr.append((x1, y1))
 						if len(tr) > self.track_len:
 							del tr[0]
@@ -98,7 +101,24 @@ class App:
 					temp=np.array(np.mean(coords,axis=0))
 					tx,ty=temp[0],temp[1]
 					cv2.circle(vis,(tx,ty),2,(0,255,0),-1)
-					cv2.cv.Rectangle(cv2.cv.fromarray(vis), (self.x,self.y), (self.x+self.w,self.y+self.h), 255)
+
+					if faces==[]:
+						print "no rostro"
+						if band==0:
+							self.distx=tx-self.x
+							self.disty=ty-self.y
+						band+=1
+						self.x=np.int32(tx-self.distx)
+						self.y=np.int32(ty-self.disty)
+						cv2.cv.Rectangle(cv2.cv.fromarray(vis), (self.x,self.y), (self.x+self.w,self.y+self.h), 255)
+					else:
+						print "rostro"
+						band=0
+
+					crop_img = frame[self.y:self.y+self.h, self.x:self.x+self.w] # Crop from x, y, w, h -> 100, 200, 300, 400
+					# NOTE: its img[y: y + h, x: x + w] and *not* img[x: x + w, y: y + h]
+					crop_img=cv2.resize(crop_img,(80,80))
+					cv2.imwrite('messigray.jpg',crop_img)
 				except:
 					print "no hay puntos de interes..."
 
