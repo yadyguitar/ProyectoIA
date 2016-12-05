@@ -31,4 +31,3 @@ class Caracteristicas:
     score = dot(coeff.T,M) # projection of the data in the new space
     return coeff
 
-#Caracteristicas(5).getCaract("setMuestras/imagenes/00.jpg")
