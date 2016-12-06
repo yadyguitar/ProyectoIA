@@ -23,7 +23,8 @@ import cv2
 import video
 from common import anorm2, draw_str
 from time import clock
-
+from Entrenamiento import Entrenamiento
+from getCaract import Caracteristicas
 
 HAAR_CASCADE_PATH = "haarcascade_frontalface_alt.xml"
 cascade = cv2.CascadeClassifier(HAAR_CASCADE_PATH)
@@ -149,7 +150,8 @@ class App:
 					crop_img = frame[self.y:self.y+self.h, self.x:self.x+self.w] # Crop from x, y, w, h -> 100, 200, 300, 400
 					# NOTE: its img[y: y + h, x: x + w] and *not* img[x: x + w, y: y + h]
 					crop_img=cv2.resize(crop_img,(80,80))
-					cv2.imwrite(""+str(self.frame_idx)+".jpg",crop_img)
+					cv2.imwrite("a.jpg",crop_img)
+					Entrenamiento().clasificar(Caracteristicas(5).getCaract("a.jpg"))
 				except:
 					print "error crop"
 			if ch == 27:

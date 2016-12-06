@@ -26,7 +26,8 @@ class Muestras:
 		self.muestras=open('setMuestras/muestras.txt','a+')
 		self.resultados_muestras=open('setMuestras/resultados_muestras.txt','a+')
 		
-
 '''
+
+
 x,y=Muestras().getMuestras()
 print "Muestras:" ,np.shape(x),"resultados:",np.shape(y)'''

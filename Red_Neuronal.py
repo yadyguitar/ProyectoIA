@@ -41,22 +41,25 @@ class Red_Neuronal:
 
 	def modifica_pesos(self,x,y):
 		#leer las muestras (ya sea en una funcion a parte, o blablabla)
-		error=np.multiply( self.salidaCapas[-1], np.multiply((1-self.salidaCapas[-1]),y-self.salidaCapas[-1]))
+		error=np.multiply( self.salidaCapas[-1], np.multiply((1-self.salidaCapas[-1]),y.astype(float)-self.salidaCapas[-1]))
+
 		errorOut= error[:]
 		#Calculo los pesos cercanos y los errores de capa oculta
-		for capas in range(len(self.numeroCapaOculta)):
+
+		for capas in range(len(self.numeroCapaOculta)): #capa oculta es: (2,3,5) o sea... 3 capas, o sea... capas= 0, 1, 2
 			n=(capas*-1)-1
+
 			filas,columnas=np.shape(self.pesos[n])
 			for i in range(columnas):
 				for j in range(filas):
-					self.pesos[n][j][i]+=(error[i]*self.salidaCapas[n-1][j])
+					self.pesos[n][j][i]+=(float(error[i])*float(self.salidaCapas[n-1][j]))
 		
 			errorTemp=[]
 			for i in range(len(self.salidaCapas[n-1])):
 				suma=0
 				for e in range(len(error)):
-					suma+=error[e]*self.pesos[n][i][e]
-				errorTemp.append( self.salidaCapas[n-1][i]*(1-self.salidaCapas[n-1][i])*suma )
+					suma+=float(error[e])*float(self.pesos[n][i][e])
+				errorTemp.append(float( self.salidaCapas[n-1][i])*float((1-self.salidaCapas[n-1][i]))*float(suma ))
 			error=[]
 			error=errorTemp[:]
 
@@ -64,7 +67,7 @@ class Red_Neuronal:
 		filas,columnas=np.shape(self.pesos[0])
 		for i in range(filas):
 			for j in range(columnas):
-				self.pesos[0][i][j]+=(error[j]*x[i])
+				self.pesos[0][i][j]+=(float(error[j])*float(x[i]))
 		
 		self.guardarPesos()
 		return errorOut
