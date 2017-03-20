@@ -2,6 +2,7 @@ from pylab import imread,subplot,imshow,title,gray,figure,show,NullLocator
 from numpy import mean,cov,cumsum,dot,linalg,size,flipud,argsort,shape,reshape,asmatrix
 import cv2
 import numpy as np
+import matplotlib.pylab as plt
 
 class Caracteristicas:
   def __init__(self, numpc):
@@ -29,5 +30,12 @@ class Caracteristicas:
     if numpc < p and numpc >= 0:
       coeff = coeff[:,range(numpc)] # cutting some PCs if needed
     score = dot(coeff.T,M) # projection of the data in the new space
+    #fig = plt.figure()
+    #ax=fig.add_subplot(1,1,1)
+    #ax.set_aspect('equal')
+    #plt.imshow(coeff, interpolation='nearest', cmap=plt.cm.ocean)
+    #plt.colorbar()
+    #plt.show()
     return coeff
 
+Caracteristicas(5).getCaract("a.jpg")

@@ -22,10 +22,9 @@ class Entrenamiento:
 			errorSum=0
 			for i in range(tam): #modifica pesos acorde a las muestras introducicas i -> muestra
 				self.red.genera_pesos()
-				#print "\nSalida muestra",i+1,":\n",	
-				self.red.getSalida(self.muestras[i]),#"\nresultado esperado: \n",self.resultados[i]
+				print "\nSalida muestra",i+1,":\n",	self.red.getSalida(self.muestras[i]),"\nresultado esperado: \n",self.resultados[i]
 				e=self.red.modifica_pesos(self.muestras[i],np.asarray(self.resultados[i]))
-				#print "\nError: ",e
+				print "\nError: ",e
 				#sumatoria del error de la salida de la muestra actual (en este caso: 4 muestras error considerado 0.01 (lo maximo de error que podria tener 1 salida de las 4 que tiene seria 0.03999999))
 				suma=sum(np.absolute(e))
 				errorSum+=suma
@@ -61,7 +60,7 @@ for i in range(10):
 	temp=Caracteristicas(5).getCaract("setMuestras/imagenes/8"+cad+str(i)+".jpg")
 	Muestras().addMuestra(temp,[[1.0,0.0,0.0,0.0]]) #izq arriba
 '''
-Entrenamiento().entrenar()
+#Entrenamiento().entrenar()
 #print Entrenamiento().clasificar(Caracteristicas(5).getCaract("a.jpg"))
 #print np.array_equal(np.around(Entrenamiento().clasificar(Caracteristicas(5).getCaract("020.jpg"))),[(0,1,0,1)])
 
